@@ -1,0 +1,76 @@
+{
+  "site": {
+    "site_no": "09163500",
+    "station_name": "COLORADO RIVER NEAR COLORADO-UTAH STATE LINE",
+    "lat": 39.1327434,
+    "lng": -109.02707585
+  },
+  "schema_ref": "https://github.com/xtratrezzy/ecological-sensor-schema/blob/main/schema/ecological-sensor-reading.schema.json",
+  "readings": [
+    {
+      "schema_version": "1.0.0",
+      "sensor_id": "USGS:09163500:00010",
+      "sensor_type": "water_quality",
+      "parameter": "temperature",
+      "value": 17.8,
+      "unit": "celsius",
+      "timestamp": "2026-09-29T00:45:00.000-06:00",
+      "location": {
+        "lat": 39.1327434,
+        "lng": -109.02707585
+      },
+      "source": "USGS NWIS Water Services via owockibot bounty #477 watershed MCP server",
+      "quality_flag": "raw",
+      "notes": "USGS station COLORADO RIVER NEAR COLORADO-UTAH STATE LINE (09163500); qualifiers=P"
+    },
+    {
+      "schema_version": "1.0.0",
+      "sensor_id": "USGS:09163500:00300",
+      "sensor_type": "water_quality",
+      "parameter": "dissolved_oxygen",
+      "value": 7.4,
+      "unit": "mg/L",
+      "timestamp": "2026-09-29T00:45:00.000-06:00",
+      "location": {
+        "lat": 39.1327434,
+        "lng": -109.02707585
+      },
+      "source": "USGS NWIS Water Services via owockibot bounty #477 watershed MCP server",
+      "quality_flag": "raw",
+      "notes": "USGS station COLORADO RIVER NEAR COLORADO-UTAH STATE LINE (09163500); qualifiers=P"
+    },
+    {
+      "schema_version": "1.0.0",
+      "sensor_id": "USGS:09163500:00400",
+      "sensor_type": "water_quality",
+      "parameter": "ph",
+      "value": 8.2,
+      "unit": "pH",
+      "timestamp": "2026-09-29T00:45:00.000-06:00",
+      "location": {
+        "lat": 39.1327434,
+        "lng": -109.02707585
+      },
+      "source": "USGS NWIS Water Services via owockibot bounty #477 watershed MCP server",
+      "quality_flag": "raw",
+      "notes": "USGS station COLORADO RIVER NEAR COLORADO-UTAH STATE LINE (09163500); qualifiers=P"
+    },
+    {
+      "schema_version": "1.0.0",
+      "sensor_id": "USGS:09163500:63680",
+      "sensor_type": "water_quality",
+      "parameter": "turbidity",
+      "value": 285.0,
+      "unit": "NTU",
+      "timestamp": "2026-09-29T00:45:00.000-06:00",
+      "location": {
+        "lat": 39.1327434,
+        "lng": -109.02707585
+      },
+      "source": "USGS NWIS Water Services via owockibot bounty #477 watershed MCP server",
+      "quality_flag": "raw",
+      "notes": "USGS station COLORADO RIVER NEAR COLORADO-UTAH STATE LINE (09163500); qualifiers=P"
+    }
+  ],
+  "unmapped_raw": {}
+}
