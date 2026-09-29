@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/xtratrezzy/ecological-sensor-schema/schema/ecological-sensor-reading.schema.json",
+  "title": "Ecological Sensor Reading",
+  "description": "A standardized single reading from a water quality, soil, or air quality sensor, intended for bioregional ecological monitoring pipelines and dashboards.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "sensor_id",
+    "sensor_type",
+    "parameter",
+    "value",
+    "unit",
+    "timestamp",
+    "location",
+    "source"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "Version of this schema the reading conforms to. Bump on breaking changes."
+    },
+    "sensor_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "Stable unique identifier for the physical or virtual sensor that produced this reading (e.g. a device serial number, a station code, or a UUID)."
+    },
+    "sensor_type": {
+      "type": "string",
+      "enum": ["water_quality", "soil", "air_quality"],
+      "description": "The broad category of sensor. Determines which values are valid for 'parameter' and 'unit'."
+    },
+    "parameter": {
+      "type": "string",
+      "description": "The specific measurement this reading represents. Allowed values depend on sensor_type (see the conditional rules below)."
+    },
+    "value": {
+      "type": "number",
+      "description": "The measured value, in the unit given by 'unit'. Must be finite (no NaN/Infinity)."
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measurement for 'value'. Allowed values depend on 'parameter' (see the conditional rules below)."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp, UTC preferred (e.g. '2026-09-16T08:30:00Z'), marking when the reading was taken."
+    },
+    "location": {
+      "type": "object",
+      "required": ["lat", "lng"],
+      "additionalProperties": false,
+      "description": "WGS84 coordinates of the sensor at the time of the reading.",
+      "properties": {
+        "lat": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90,
+          "description": "Latitude in decimal degrees, WGS84."
+        },
+        "lng": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180,
+          "description": "Longitude in decimal degrees, WGS84."
+        },
+        "elevation_m": {
+          "type": "number",
+          "description": "Optional elevation in meters above sea level, useful for soil/air readings where altitude affects interpretation."
+        }
+      }
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Who or what collected/published this reading — an organization name, a project name, a URL, or a bounty/submission reference (e.g. 'owockibot bounty #288', 'USGS Water Services API', 'community volunteer network')."
+    },
+    "quality_flag": {
+      "type": "string",
+      "enum": ["raw", "validated", "estimated", "suspect"],
+      "default": "raw",
+      "description": "Optional data-quality flag. 'raw' = unprocessed sensor output, 'validated' = passed QA checks, 'estimated' = interpolated/modeled, 'suspect' = flagged as possibly inaccurate but retained for transparency."
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Optional free-text notes (e.g. calibration info, weather conditions, anomalies)."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "sensor_type": { "const": "water_quality" } }
+      },
+      "then": {
+        "properties": {
+          "parameter": {
+            "enum": ["ph", "dissolved_oxygen", "turbidity", "temperature"]
+          }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "parameter": { "const": "ph" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "pH" },
+                "value": { "minimum": 0, "maximum": 14 }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "parameter": { "const": "dissolved_oxygen" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "mg/L" },
+                "value": { "minimum": 0, "maximum": 20 }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "parameter": { "const": "turbidity" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "NTU" },
+                "value": { "minimum": 0, "maximum": 4000 }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "parameter": { "const": "temperature" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "celsius" },
+                "value": { "minimum": -5, "maximum": 45 }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": { "sensor_type": { "const": "soil" } }
+      },
+      "then": {
+        "properties": {
+          "parameter": {
+            "enum": ["moisture", "nitrogen", "phosphorus", "organic_matter"]
+          }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "parameter": { "const": "moisture" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "percent" },
+                "value": { "minimum": 0, "maximum": 100 }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "parameter": { "const": "nitrogen" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "mg/kg" },
+                "value": { "minimum": 0, "maximum": 2000 }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "parameter": { "const": "phosphorus" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "mg/kg" },
+                "value": { "minimum": 0, "maximum": 2000 }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "parameter": { "const": "organic_matter" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "percent" },
+                "value": { "minimum": 0, "maximum": 100 }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": { "sensor_type": { "const": "air_quality" } }
+      },
+      "then": {
+        "properties": {
+          "parameter": {
+            "enum": ["pm2_5", "pm10", "co2", "ozone"]
+          }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "parameter": { "const": "pm2_5" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "ug/m3" },
+                "value": { "minimum": 0, "maximum": 1000 }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "parameter": { "const": "pm10" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "ug/m3" },
+                "value": { "minimum": 0, "maximum": 2000 }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "parameter": { "const": "co2" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "ppm" },
+                "value": { "minimum": 0, "maximum": 10000 }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "parameter": { "const": "ozone" } } },
+            "then": {
+              "properties": {
+                "unit": { "const": "ppb" },
+                "value": { "minimum": 0, "maximum": 1000 }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
